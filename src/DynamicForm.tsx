@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { FC, useEffect } from 'react';
-import { List, Card, WingBlank } from 'antd-mobile';
+import { List, Card, WhiteSpace } from 'antd-mobile';
 import { InputItemPropsType } from 'antd-mobile/es/input-item/PropsType';
 import { DatePickerPropsType } from 'antd-mobile/es/date-picker/PropsType';
 import { CardHeaderPropsType } from 'antd-mobile/es/card/PropsType';
@@ -98,6 +98,7 @@ export interface IFormItemProps {
 
 interface CardDForm extends CardHeaderPropsType {
   data: IFormItemProps[];
+  type?: 'list' | 'card' | 'fullcard';
 }
 
 export type DFormData = IFormItemProps[][] | IFormItemProps[] | CardDForm | CardDForm[];
@@ -187,35 +188,44 @@ const changeData = (oldData: IFormItemProps[], autoLineFeed: boolean) =>
     return item;
   });
 
+const renderListMain = (formData: DFormData, allDisabled: boolean, autoLineFeed: boolean, title?: React.ReactNode) => (
+  <React.Fragment key={`cardlist-${title}-${formData[0].fieldProps}`}>
+    <List renderHeader={() => title}>
+      {changeData(formData as IFormItemProps[], autoLineFeed).map(item =>
+        getFormItem(item, allDisabled),
+      )}
+    </List>
+  </React.Fragment>
+);
+
 const renderCardMain = (formData: DFormData, allDisabled: boolean, autoLineFeed: boolean) => {
-  const { data, ...otherData } = formData as CardDForm;
+  const { data, type, ...otherData } = formData as CardDForm;
+  const {title} = otherData;
+  if (type === 'list') {
+    return renderListMain(data, allDisabled, autoLineFeed, title);
+  }
+  const full = type==='fullcard';
   return (
-    <WingBlank size="lg">
+    <React.Fragment key={`cardlist-${type}-${title}-${data[0].fieldProps}`}>
       <Card
+        full={full}
         style={{
           paddingBottom: 0,
         }}
       >
-        <Card.Header {...otherData} />
+        {Object.keys(otherData).length !== 0 && <Card.Header {...otherData} />}
         <List>
           {changeData(data as IFormItemProps[], autoLineFeed).map(item =>
             getFormItem(item, allDisabled),
           )}
         </List>
       </Card>
-    </WingBlank>
+      <WhiteSpace size="sm"></WhiteSpace>
+    </React.Fragment>
   );
 };
 
-const renderListMain = (formData: DFormData, allDisabled: boolean, autoLineFeed: boolean) => (
-  <>
-    <List>
-      {changeData(formData as IFormItemProps[], autoLineFeed).map(item =>
-        getFormItem(item, allDisabled),
-      )}
-    </List>
-  </>
-);
+
 
 const renderMainList = (
   type: DFormType,
@@ -230,9 +240,7 @@ const renderMainList = (
     return (formData as CardDForm[]).map(item => renderCardMain(item, allDisabled, autoLineFeed));
   }
   if (type === 'NORMALLIST') {
-    return (formData as IFormItemProps[][]).map(item =>
-      renderListMain(item, allDisabled, autoLineFeed),
-    );
+    return (formData as IFormItemProps[][]).map(item => renderListMain(item, allDisabled, autoLineFeed));
   }
   return renderListMain(formData, allDisabled, autoLineFeed);
 };
