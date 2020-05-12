@@ -24,6 +24,7 @@ import {
   MultiplePicker,
   AddressPicker,
 } from './components';
+import errorMessages from './utils/message';
 
 import NewFieldPicker from './components/NewFieldPicker/NewFieldPicker';
 
@@ -278,6 +279,7 @@ const DynamicForm: FC<IDynamicFormProps> = ({
           defaultFailed(errorInfo, onFinishFailed)
         }
         onValuesChange={onValuesChange}
+        validateMessages={errorMessages}
       >
         {rederChildren}
         {children}

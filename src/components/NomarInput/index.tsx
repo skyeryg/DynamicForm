@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { InputItem } from 'antd-mobile';
 import { InputItemPropsType } from 'antd-mobile/es/input-item/PropsType';
 import { Rule } from 'rc-field-form/es/interface';
-import Field from '../Field';
+import Field from '../FieldItem';
 
 import '../../styles/index.less';
 
@@ -47,25 +47,19 @@ const NomarInput: FC<INomarInputProps> = props => {
   return (
     <>
       {!hidden && (
-        <React.Fragment>
-          <div className="alitajs-dform-input-title">
-            {isVertical && (
-              <div className="alitajs-dform-vertical-title">
-                {required && hasStar && <span className="alitajs-dform-redStar">*</span>}
-                <span id={fieldProps} className="alitajs-dform-title">
-                  {title}
-                </span>
-                {subTitle}
-              </div>
-            )}
-            {extra !== '' && isVertical && <div className="alitajs-dform-area-extra">{extra}</div>}
-          </div>
-
+        <div className="alitajs-dform-input">
           <div className={`alitajs-dform${isVertical ? '-vertical' : ''}-input`}>
-            <Field name={fieldProps} rules={rules || [{ required, message: `请输入${title}` }]}>
+            <Field 
+              name={fieldProps} 
+              title={title}
+              required={required}
+              isVertical={isVertical}
+              subTitle={subTitle}
+              rules={rules}
+              hasStar={hasStar}
+            >
               <InputItem
                 {...otherProps}
-                extra={isVertical ? '' : extra}
                 type={inputType}
                 style={{ textAlign: isVertical ? 'left' : 'right', ...coverStyle }}
                 onBlur={val => {
@@ -73,13 +67,13 @@ const NomarInput: FC<INomarInputProps> = props => {
                 }}
               >
                 {required && hasStar && <span className="alitajs-dform-redStar">*</span>}
-                <span id={fieldProps} className="alitajs-dform-title">
+                {!isVertical && <span id={fieldProps} className="alitajs-dform-title">
                   {title}
-                </span>
+                </span>}
               </InputItem>
             </Field>
           </div>
-        </React.Fragment>
+        </div>
       )}
     </>
   );

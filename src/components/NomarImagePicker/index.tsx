@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { Rule } from 'rc-field-form/es/interface';
 import { ImagePicker, Toast } from 'antd-mobile';
 import { ImagePickerPropTypes } from 'antd-mobile/es/image-picker/PropsType';
-import Field from '../Field';
+import Field from '../FieldItem';
 import '../../styles/index.less';
 
 export interface INomarImagePickerProps extends ImagePickerPropTypes {
@@ -36,16 +36,14 @@ const NomarImagePicker: FC<INomarImagePickerProps> = props => {
     <React.Fragment>
       {!hidden && (
         <div className="alitajs-dform-image-picker">
-          <div className="alitajs-dform-vertical-title">
-            {required && hasStar && <span className="alitajs-dform-redStar">*</span>}
-            <span id={fieldProps} className="alitajs-dform-title">
-              {title}
-            </span>
-            {subTitle}
-          </div>
           <Field
-            name={fieldProps}
-            rules={rules || [{ required, message: `请选择${title}` }]}
+            name={fieldProps} 
+            title={title}
+            required={required}
+            isVertical
+            subTitle={subTitle}
+            rules={rules}
+            hasStar={hasStar}
             shouldUpdate={(prevValue: any, nextValue: any) => {
               const files = nextValue[fieldProps] || [];
               if (files && files.length > fileList.length) {

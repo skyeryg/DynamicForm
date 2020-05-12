@@ -3,7 +3,7 @@ import { TextareaItem } from 'antd-mobile';
 import { Rule } from 'rc-field-form/es/interface';
 import { TextAreaItemPropsType } from 'antd-mobile/es/textarea-item/PropsType';
 import classnames from 'classnames';
-import Field from '../Field';
+import Field from '../FieldItem';
 import '../../styles/index.less';
 
 export interface INomarTextAreaProps extends TextAreaItemPropsType {
@@ -31,7 +31,6 @@ const NomarTextArea: FC<INomarTextAreaProps> = props => {
     title,
     positionType = 'horizontal',
     hasStar = true,
-    extra = '',
     subTitle,
     hidden = false,
     onBlur,
@@ -40,15 +39,14 @@ const NomarTextArea: FC<INomarTextAreaProps> = props => {
 
   // let autoFocusInst: { focus: () => void } | null = null;
 
-  let isVertical = positionType === 'vertical';
-  if (extra) isVertical = true;
+  const isVertical = positionType === 'vertical';
 
   const titleDiv = () => (
     <>
-      {required && hasStar && <span className="alitajs-dform-redStar">*</span>}
-      <span id={fieldProps} className="alitajs-dform-title">
+      {!isVertical && required && hasStar && <span className="alitajs-dform-redStar">*</span>}
+      {!isVertical && <span id={fieldProps} className="alitajs-dform-title">
         {title}
-      </span>
+      </span>}
     </>
   );
 
@@ -61,18 +59,6 @@ const NomarTextArea: FC<INomarTextAreaProps> = props => {
     <>
       {!hidden && (
         <React.Fragment>
-          <div className="alitajs-dform-area-title">
-            {isVertical && (
-              <div className="alitajs-dform-vertical-title">
-                {required && hasStar && <span className="alitajs-dform-redStar">*</span>}
-                <span id={fieldProps} className="alitajs-dform-title">
-                  {title}
-                </span>
-                {subTitle}
-              </div>
-            )}
-            {extra !== '' && <div className="alitajs-dform-area-extra">{extra}</div>}
-          </div>
           <div
             className={classnames({
               'alitajs-dform-vertical-area': isVertical,
@@ -80,17 +66,16 @@ const NomarTextArea: FC<INomarTextAreaProps> = props => {
             })}
           >
             <Field
-              name={fieldProps}
-              rules={rules || [{ required, message: `请输入${title}` }]}
-              shouldUpdate={(prevValue: any, nextValue: any) => {
-                // if (autoFocusInst) autoFocusInst.focus();
-                return prevValue !== nextValue;
-              }}
+              name={fieldProps} 
+              title={title}
+              required={required}
+              isVertical={isVertical}
+              subTitle={subTitle}
+              rules={rules}
+              hasStar={hasStar}
             >
               <TextareaItem
                 {...otherProps}
-                // eslint-disable-next-line no-return-assign
-                // ref={(el: any) => (autoFocusInst = el)}
                 title={titleDiv()}
                 style={{
                   textAlign: rows === 1 ? 'right' : 'left',
