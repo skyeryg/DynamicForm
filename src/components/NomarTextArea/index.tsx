@@ -39,7 +39,7 @@ const NomarTextArea: FC<INomarTextAreaProps> = props => {
 
   // let autoFocusInst: { focus: () => void } | null = null;
 
-  const isVertical = positionType === 'vertical';
+  const isVertical = positionType === 'vertical' || !!subTitle;
 
   const titleDiv = () => (
     <>

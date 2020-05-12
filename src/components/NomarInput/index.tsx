@@ -37,7 +37,7 @@ const NomarInput: FC<INomarInputProps> = props => {
     ...otherProps
   } = props;
 
-  const isVertical = positionType === 'vertical';
+  const isVertical = positionType === 'vertical' || !!subTitle;
 
   const inputOnBlur = (val: string | undefined) => {
     window.scrollTo(0, 0);
