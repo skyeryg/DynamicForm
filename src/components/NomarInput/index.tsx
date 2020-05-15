@@ -60,6 +60,7 @@ const NomarInput: FC<INomarInputProps> = props => {
             >
               <InputItem
                 {...otherProps}
+                extra={extra}
                 type={inputType}
                 style={{ textAlign: isVertical ? 'left' : 'right', ...coverStyle }}
                 onBlur={val => {
